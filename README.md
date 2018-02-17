@@ -1,0 +1,2 @@
+# genews
+Gerador de Newsletter
