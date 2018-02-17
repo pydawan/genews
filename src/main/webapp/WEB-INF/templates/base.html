@@ -1,0 +1,140 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Comunica AGR (Boletim informativo)</title>
+</head>
+<body style="background-color: #D6D6D6; color: white;">
+   <table id="wrapper" style="width: 100%; background-color: #D6D6D6;"
+      cellspacing="0" cellpadding="0" border="0" align="center">
+      <tr>
+         <td>
+            <table id="conteudo"
+               style="width: 600px; background-color: white; border: 1px solid black"
+               cellspacing="0" cellpadding="0" border="0" align="center">
+               <tr>
+                  <td><img
+                     src="https://farm4.staticflickr.com/3837/14472074393_eed855cffb_o.jpg"
+                     style="width: 100%; height: auto;" /></td>
+               </tr>
+               <tr>
+                  <td>&nbsp;</td>
+               </tr>
+               <tr>
+                  <td id="edicao"
+                     style="width: 100%; color: red; font-weight: bold; font-size: 14px; text-align: right;">
+                     <p>Edição {{ edicao }}, {{ template.dataGeracao|date("dd 'de'
+                        MMMM 'de' yyyy") }}&nbsp;&nbsp;&nbsp;</p>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <table id="noticias" cellspacing="0" cellpadding="0" border="0"
+                        style="border-collapse: separate; border-spacing: 0 10px; margin-bottom: 5px;"
+                        align="center">
+                        {% for noticia in template.noticias %}
+                        <tr>
+                           <td>
+                              <table class="noticia"
+                                 style="background-color: #2FA4E7; border-spacing: 20px 0; width: 566px;"
+                                 align="center">
+                                 <tr>
+                                    <td>
+                                       <h1 style="width: 100%; 
+                                           color: white; font-size: 20px; font-weight: bold; 
+                                           font-familly: 'Arial Black'; margin-top: 10px; 
+                                           text-align: justify;">{{ noticia.titulo }}
+                                       </h1>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>
+                                       <p
+                                          style="width: 100%; color: black; font-size: 14px; 
+                                          font-familly: arial; text-align: justify; 
+                                          margin-bottom: 10px;">{{ noticia.conteudo }}
+                                       </p>
+                                    </td>
+                                 </tr>
+                                 <tr>
+                                    <td>
+                                       <p style="width: 100%; text-align: right;">
+                                          <a
+                                             style="color: #FFFF00; font-weight: bold; font-size: 14px; 
+                                             text-decoration: none;" href="{{ noticia.url }}" 
+                                             title="Leia mais" target="blank">Leia mais                                       
+                                          </a>
+                                       </p>
+                                    {% if noticia.intranet %}
+                                       <p style="width: 100%; 
+                                          text-align: right; 
+                                          color: #FFFF00; 
+                                          font-style: italic;">Intranet
+                                       </p>
+                                    {% endif %}
+                                    </td>
+                                 </tr>
+                              </table>
+                           </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                                    <td align="center">
+                                        <span style="color: red; font-size: 8pt; font-style: italic; 
+                                            font-weight: bold; text-align: justify;">
+                                            Intranet
+                                        </span> 
+                                        <span style="color: black; font-size: 8pt; font-weight: bold; 
+                                            text-align: justify;"> - 
+                                            Caso não consiga acessar a notícia de casa, favor abrir o 
+                                            link quando estiver na AGR.
+                                        </span>
+                                    </td>
+                                </tr>
+                     </table>
+                  </td>
+               </tr>
+               <tr>                   
+                  <td>
+                     <table id="rodape" style="width: 100%; background-color: black;">
+                        <tr>
+                           <td width="50px">&nbsp;</td>
+                           <td width="150px;" align="center" valign="middle">
+                              <h3>
+                                 <a
+                                    style="font-size: 14px; color: white; text-decoration: none;"
+                                    href="http://www.agr.go.gov.br"
+                                    title="Agência Goiana de Regulação, Controle e Fiscalização de Serviços Públicos"
+                                    target="blank">www.agr.go.gov.br</a>
+                              </h3>
+                           </td>
+                           <td align="center" valign="middle" width="300px;"
+                              height="26px;"><a href="http://www.agr.go.gov.br"
+                              title="Agência Goiana de Regulação, Controle e Fiscalização de Serviços Públicos"
+                              target="blank"> <img style="width: 50px; height: 32px;"
+                                 id="logo-agr"
+                                 src="https://farm6.staticflickr.com/5273/14450783724_b139c78bde_o.png" />
+                           </a></td>
+                           <td align="center" width="50px;">&nbsp;</td>
+                           <td align="center" valign="middle" width="24px;"><a
+                              href="https://www.facebook.com/AgrAgenciaGoianaDeRegulacao"
+                              target="_blank" title="Facebook da AGR"> <img
+                                 style="width: 24px; height: 24px;" id="logo-facebook"
+                                 src="https://farm6.staticflickr.com/5157/14265305858_9997b5127c_o.png" />
+                           </a></td>
+                           <td align="center" valign="middle" width="24px;"><a
+                              href="https://twitter.com/AGR_GO" target="_blank"
+                              title="Twitter da AGR"> <img
+                                 style="width: 24px; height: 24px;" id="logo-twitter"
+                                 src="https://farm3.staticflickr.com/2916/14265287690_4593320305_o.png" />
+                           </a></td>
+                           <td width="50px;">&nbsp;</td>
+                        </tr>
+                     </table>
+                  </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+   </table>
+</body>
+</html>

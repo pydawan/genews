@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+archivesBaseName = 'genews'
+group = 'br.go.gov.agr'
+version = 'v1.0.0'
+
+repositories {
+   mavenLocal()
+   mavenCentral()
+   maven { 
+      url 'https://repository.primefaces.org' 
+   }
+}
+
+dependencies {
+   
+   compile 'mysql:mysql-connector-java:5.1.25'
+   compile 'org.tinylog:tinylog:1.0.3'
+   compile 'org.tinylog:log4j-facade:1.0.3'
+   compile 'org.tinylog:slf4j-binding:1.0.3'
+   compile 'org.projectlombok:lombok:1.16.18'
+   compile 'javax.servlet:javax.servlet-api:3.1.0'
+   compile 'jstl:jstl:1.2'
+   compile 'com.sun.faces:jsf-api:2.2.15'
+   compile 'com.sun.faces:jsf-impl:2.2.15'
+   compile 'org.primefaces:primefaces:6.1'
+   compile 'com.github.adminfaces:admin-theme:1.0.0-RC11'
+   compile 'org.jsoup:jsoup:1.8.3'
+   compile 'com.mitchellbosecke:pebble:2.4.0'
+   
+   compile files('./src/main/webapp/WEB-INF/lib/all-themes-1.0.10.jar')
+   compile files('./src/main/webapp/WEB-INF/lib/jedi-orm-v1.0.0.jar')
+   
+   testCompile 'junit:junit:4.12'
+   
+}

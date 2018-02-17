@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:p="http://primefaces.org/ui"
+   xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+   <ui:composition template="/WEB-INF/include/layout.xhtml">
+      <ui:define name="area">Newsletter</ui:define>
+      <ui:define name="content">
+         <h:form
+            id="form2"
+            prependId="false">
+            <div style="width: 100%; margin: 0 auto; text-align: center; margin-bottom: 15px;">
+               <p:commandButton
+                  value="Adicionar"
+                  icon="ui-icon-plusthick"
+                  style="color: #3D3333; text-align: center; border: none;"
+                  actionListener="#{newsletterBean.adicionar}"
+                  oncomplete="PF('dialogNewsletter').show()"
+                  update=":form3" />
+            </div>
+            <p:dataTable
+               id="newsletters"
+               var="newsletter"
+               value="#{newsletterBean.list}"
+               rows="5"
+               style="width: 98%; margin: 0 auto; text-align: center;"
+               paginator="true"
+               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                        {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+               currentPageReportTemplate="Página {currentPage} de {totalPages}"
+               rowsPerPageTemplate="5,10,15"
+               resizableColumns="true"
+               emptyMessage="Nenhum registro.">
+               <p:column
+                  headerText="Id"
+                  width="50">
+                  <h:outputText value="#{newsletter.id}" />
+               </p:column>
+               <p:column headerText="Nome">
+                  <h:outputText value="#{newsletter.nome}" />
+               </p:column>
+               <p:column
+                  headerText="E-mail"
+                  width="250">
+                  <h:outputText value="#{newsletter.email}" />
+               </p:column>
+               <p:column headerText="Remetente">
+                  <h:outputText value="#{newsletter.remetente}" />
+               </p:column>
+               <p:column
+                  headerText="Autor"
+                  width="100">
+                  <h:outputText value="#{newsletter.autor.login}" />
+               </p:column>
+               <p:column
+                  headerText="Criada em"
+                  width="150">
+                  <h:outputText value="#{newsletter.dataCriacao}">
+                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                  </h:outputText>
+               </p:column>
+               <p:column headerText="Ações">
+                  <p:commandButton
+                     id="editar"
+                     value="Editar"
+                     icon="ui-icon-pencil"
+                     oncomplete="PF('dialogNewsletter').show()"
+                     actionListener="#{newsletterBean.editar(newsletter)}"
+                     update=":form3" />
+                  <p:spacer width="5" />
+                  <p:commandButton
+                     id="remover"
+                     value="Remover"
+                     icon="ui-icon-minusthick"
+                     actionListener="#{newsletterBean.confirmarRemocao(newsletter)}"
+                     oncomplete="PF('confirmacao').show()"
+                     rendered="#{loginBean.usuario.admin}" />
+               </p:column>
+            </p:dataTable>
+         </h:form>
+         <p:dialog
+            header="Newsletter"
+            widgetVar="dialogNewsletter"
+            resizable="false"
+            draggable="false"
+            modal="true"
+            showEffect="slide"
+            appendToBody="true">
+            <h:form
+               id="form3"
+               prependId="false">
+               <p:panelGrid
+                  columns="2"
+                  styleClass="no-border">
+                  <p:outputLabel
+                     value="Nome"
+                     for="nome" />
+                  <p:inputText
+                     id="nome"
+                     styleClass="newsletter-textfield"
+                     maxlength="50"
+                     size="51"
+                     value="#{newsletterBean.newsletter.nome}"
+                     required="true"
+                     requiredMessage="Nome é um campo de preenchimento obrigatório" />
+                  <p:outputLabel
+                     value="E-mail"
+                     for="email" />
+                  <p:inputText
+                     id="email"
+                     styleClass="newsletter-textfield"
+                     maxlength="100"
+                     size="51"
+                     value="#{newsletterBean.newsletter.email}"
+                     required="true"
+                     requiredMessage="E-mail é um campo de preenchimento obrigatório" />
+                  <p:outputLabel
+                     value="Remetente"
+                     for="remetente" />
+                  <p:inputText
+                     id="remetente"
+                     styleClass="newsletter-textfield"
+                     maxlength="50"
+                     size="51"
+                     value="#{newsletterBean.newsletter.remetente}"
+                     required="true"
+                     requiredMessage="Remetente é um campo de preenchimento obrigatório" />
+                  <p:outputLabel value="" />
+                  <p:row>
+                     <p:column
+                        colspan="2"
+                        styleClass="td-newsletter">
+                        <p:panel styleClass="pn-newsletter-buttons">
+                           <p:commandButton
+                              value="Salvar"
+                              icon="ui-icon-pencil"
+                              styleClass="bn-newsletter"
+                              actionListener="#{newsletterBean.salvar}"
+                              oncomplete="PF('dialogNewsletter').hide()"
+                              update=":form2:newsletters :form1:messages" />
+                           <p:outputLabel value=" " />
+                           <p:commandButton
+                              value="Limpar"
+                              icon="ui-icon-document"
+                              styleClass="bn-newsletter"
+                              actionListener="#{newsletterBean.limpar}"
+                              immediate="true"
+                              update=":form3">
+                              <p:resetInput target="@form" />
+                           </p:commandButton>
+                        </p:panel>
+                     </p:column>
+                  </p:row>
+               </p:panelGrid>
+            </h:form>
+         </p:dialog>
+         <p:confirmDialog
+            message="Confirma a remoção?"
+            showEffect="bounce"
+            hideEffect="fade"
+            header="Remover Newsletter"
+            severity="alert"
+            widgetVar="confirmacao">
+            <p:panel styleClass="pn-newsletter-remove">
+               <p:commandButton
+                  value="Sim"
+                  update=":form2:newsletters"
+                  oncomplete="PF('confirmacao').hide()"
+                  actionListener="#{newsletterBean.remover}" />
+               <p:commandButton
+                  type="button"
+                  value="Não"
+                  onclick="PF('confirmacao').hide()" />
+            </p:panel>
+         </p:confirmDialog>
+      </ui:define>
+   </ui:composition>
+</h:body>
+</html>

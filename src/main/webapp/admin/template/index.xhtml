@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:p="http://primefaces.org/ui"
+   xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+   <ui:composition template="/WEB-INF/include/layout.xhtml">
+      <ui:define name="area">Template</ui:define>
+      <ui:define name="content">
+         <h:form
+            id="form2"
+            prependId="false">
+            <div style="width: 100%; margin: 0 auto; text-align: center; margin-bottom: 15px;">
+               <p:commandButton
+                  value="Adicionar"
+                  icon="ui-icon-plusthick"
+                  style="color: #3D3333; 
+                        text-align: center; 
+                        border: none;"
+                  actionListener="#{templateBean.adicionar}"
+                  oncomplete="PF('dialogTemplate').show()"
+                  update=":form3" />
+            </div>
+            <p:dataTable
+               id="templates"
+               var="template"
+               value="#{templateBean.list}"
+               rows="5"
+               style="width: 98%; 
+                    margin: 0 auto; 
+                    text-align: center;"
+               paginator="true"
+               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} 
+                        {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+               currentPageReportTemplate="Página {currentPage} de {totalPages}"
+               rowsPerPageTemplate="5,10,15"
+               resizableColumns="true"
+               emptyMessage="Nenhum registro.">
+               <p:column
+                  headerText="Id"
+                  width="25">
+                  <h:outputText value="#{template.id}" />
+               </p:column>
+               <p:column
+                  headerText="Newsletter"
+                  width="350">
+                  <h:outputText value="#{template.newsletter.nome}" />
+               </p:column>
+               <p:column
+                  headerText="Edição"
+                  width="100">
+                  <h:outputText value="#{template.edicao}" />
+               </p:column>
+               <p:column
+                  headerText="Autor"
+                  width="200">
+                  <h:outputText value="#{template.autor.login}" />
+               </p:column>
+               <p:column
+                  headerText="Gerada em"
+                  width="150">
+                  <h:outputText value="#{template.dataGeracao}">
+                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                  </h:outputText>
+               </p:column>
+               <p:column
+                  headerText="Ações"
+                  width="400">
+                  <p:commandButton
+                     id="editar"
+                     value="Editar"
+                     icon="ui-icon-pencil"
+                     oncomplete="PF('dialogTemplate').show()"
+                     actionListener="#{templateBean.editar(template)}"
+                     update=":form3" />
+                  <p:spacer width="5" />
+                  <p:commandButton
+                     value="Visualizar"
+                     icon="ui-icon-print"
+                     actionListener="#{templateBean.visualizar(template)}"
+                     oncomplete="window.open('/genews/admin/template/template-newsletter.xhtml')" />
+                  <p:spacer width="5" />
+                  <p:commandButton
+                     id="remover"
+                     value="Remover"
+                     icon="ui-icon-minusthick"
+                     actionListener="#{templateBean.confirmarRemocao(template)}"
+                     oncomplete="PF('confirmacao').show()" />
+               </p:column>
+            </p:dataTable>
+         </h:form>
+         <p:dialog
+            header="Template"
+            widgetVar="dialogTemplate"
+            resizable="false"
+            draggable="false"
+            modal="true"
+            showEffect="slide"
+            appendToBody="true">
+            <h:form
+               id="form3"
+               prependId="false">
+               <p:panelGrid
+                  columns="2"
+                  styleClass="no-border">
+                  <p:outputLabel
+                     value="Newsletter"
+                     for="newsletters" />
+                  <p:selectOneMenu
+                     id="newsletters"
+                     required="true"
+                     requiredMessage="Newsletter é um campo de preenchimento obrigatório 
+                            (Certifique-se que há ao menos uma Newsletter cadastrada)"
+                     converter="#{newsletterConverter}"
+                     style="width: 91%"
+                     widgetVar="newsletters"
+                     value="#{templateBean.newsletter}"
+                     immediate="true">
+                     <p:ajax listener="#{templateBean.getSelectedNewsletter}" />
+                     <f:selectItems
+                        value="#{newsletterBean.list}"
+                        var="newsletter"
+                        itemLabel="#{newsletter.nome}"
+                        itemValue="#{newsletter}" />
+                  </p:selectOneMenu>
+                  <p:outputLabel value="Notícias" />
+                  <p:tabView
+                     style="width: 94%;"
+                     dynamic="false"
+                     cache="false">
+                     <p:tab title="Notícia 1">
+                        <p:panelGrid
+                           columns="2"
+                           styleClass="no-border">
+                           <p:outputLabel
+                              value="Notícia 1"
+                              style="color: #1C8AD7; 
+                                        font-weight: bold;" />
+                           <h:outputText />
+                           <p:outputLabel
+                              value="Título"
+                              for="titulo1" />
+                           <p:inputText
+                              id="titulo1"
+                              styleClass="template-textfield"
+                              maxlength="100"
+                              size="51"
+                              value="#{templateBean.noticias[0].titulo}"
+                              required="true"
+                              requiredMessage="Notícia 1 - Título é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Conteúdo"
+                              for="conteudo1" />
+                           <p:inputTextarea
+                              id="conteudo1"
+                              styleClass="template-textarea"
+                              maxlength="400"
+                              rols="5"
+                              cols="49"
+                              autoResize="false"
+                              counter="counter1"
+                              counterTemplate="Restam {0} caracteres."
+                              value="#{templateBean.noticias[0].conteudo}"
+                              required="true"
+                              requiredMessage="Notícia 1 - Conteúdo é um campo de preenchimento 
+                                            obrigatório" />
+                           <h:outputText />
+                           <h:outputText id="counter1" />
+                           <p:outputLabel
+                              value="URL"
+                              for="url1" />
+                           <p:inputText
+                              id="url1"
+                              styleClass="template-textfield"
+                              maxlength="200"
+                              size="51"
+                              value="#{templateBean.noticias[0].url}"
+                              required="true"
+                              requiredMessage="Notícia 1 - URL é um campo de preenchimento 
+                                        obrigatório" />
+                           <p:outputLabel
+                              value="Intranet"
+                              for="intranet1" />
+                           <p:selectBooleanCheckbox
+                              id="intranet1"
+                              value="#{templateBean.noticias[0].intranet}" />
+                           <p:tooltip
+                              for="intranet1"
+                              value="Ao ser marcado esse campo indica que a 
+                                        Notícia é Interna (visível apenas nas dependências da AGR)." />
+                        </p:panelGrid>
+                     </p:tab>
+                     <p:tab title="Notícia 2">
+                        <p:panelGrid
+                           columns="2"
+                           styleClass="no-border">
+                           <p:outputLabel
+                              value="Notícia 2"
+                              style="color: #1C8AD7; 
+                                        font-weight: bold;" />
+                           <h:outputText />
+                           <p:outputLabel
+                              value="Título"
+                              for="titulo2" />
+                           <p:inputText
+                              id="titulo2"
+                              styleClass="template-textfield"
+                              maxlength="100"
+                              size="51"
+                              value="#{templateBean.noticias[1].titulo}"
+                              required="true"
+                              requiredMessage="Notícia 2 - Título é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Conteúdo"
+                              for="conteudo2" />
+                           <p:inputTextarea
+                              id="conteudo2"
+                              styleClass="template-textarea"
+                              maxlength="400"
+                              rols="5"
+                              cols="49"
+                              autoResize="false"
+                              counter="counter2"
+                              counterTemplate="Restam {0} caracteres."
+                              value="#{templateBean.noticias[1].conteudo}"
+                              required="true"
+                              requiredMessage="Notícia 2 - Conteúdo é um campo de preenchimento 
+                                            obrigatório" />
+                           <h:outputText />
+                           <h:outputText id="counter2" />
+                           <p:outputLabel
+                              value="URL"
+                              for="url2" />
+                           <p:inputText
+                              id="url2"
+                              styleClass="template-textfield"
+                              maxlength="200"
+                              size="51"
+                              value="#{templateBean.noticias[1].url}"
+                              required="true"
+                              requiredMessage="Notícia 2 - URL é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Intranet"
+                              for="intranet2" />
+                           <p:selectBooleanCheckbox
+                              id="intranet2"
+                              value="#{templateBean.noticias[1].intranet}" />
+                           <p:tooltip
+                              for="intranet2"
+                              value="Se esse campo for marcado essa será uma Notícia Interna 
+                                           (visível apenas nas dependências da AGR)." />
+                        </p:panelGrid>
+                     </p:tab>
+                     <p:tab title="Notícia 3">
+                        <p:panelGrid
+                           columns="2"
+                           styleClass="no-border">
+                           <p:outputLabel
+                              value="Notícia 3"
+                              style="color: #1C8AD7; 
+                                        font-weight: bold;" />
+                           <h:outputText />
+                           <p:outputLabel
+                              value="Título"
+                              for="titulo3" />
+                           <p:inputText
+                              id="titulo3"
+                              styleClass="template-textfield"
+                              maxlength="100"
+                              size="51"
+                              value="#{templateBean.noticias[2].titulo}"
+                              required="true"
+                              requiredMessage="Notícia 3 - Título é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Conteúdo"
+                              for="conteudo3" />
+                           <p:inputTextarea
+                              id="conteudo3"
+                              styleClass="template-textarea"
+                              maxlength="400"
+                              rols="5"
+                              cols="49"
+                              autoResize="false"
+                              counter="counter3"
+                              counterTemplate="Restam {0} caracteres."
+                              value="#{templateBean.noticias[2].conteudo}"
+                              required="true"
+                              requiredMessage="Notícia 3 - Conteúdo é um campo de preenchimento 
+                                            obrigatório" />
+                           <h:outputText />
+                           <h:outputText id="counter3" />
+                           <p:outputLabel
+                              value="URL"
+                              for="url3" />
+                           <p:inputText
+                              id="url3"
+                              styleClass="template-textfield"
+                              maxlength="200"
+                              size="51"
+                              value="#{templateBean.noticias[2].url}"
+                              required="true"
+                              requiredMessage="Notícia 3 - URL é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Intranet"
+                              for="intranet3" />
+                           <p:selectBooleanCheckbox
+                              id="intranet3"
+                              value="#{templateBean.noticias[2].intranet}" />
+                           <p:tooltip
+                              for="intranet3"
+                              value="Se esse campo for marcado essa será uma Notícia Interna 
+                                            (visível apenas nas dependências da AGR)." />
+                        </p:panelGrid>
+                     </p:tab>
+                     <p:tab title="Notícia 4">
+                        <p:panelGrid
+                           columns="2"
+                           styleClass="no-border">
+                           <p:outputLabel
+                              value="Notícia 4"
+                              style="color: #1C8AD7; 
+                                        font-weight: bold;" />
+                           <h:outputText />
+                           <p:outputLabel
+                              value="Título"
+                              for="titulo4" />
+                           <p:inputText
+                              id="titulo4"
+                              styleClass="template-textfield"
+                              maxlength="100"
+                              size="51"
+                              value="#{templateBean.noticias[3].titulo}"
+                              required="true"
+                              requiredMessage="Notícia 4 - Título é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Conteúdo"
+                              for="conteudo4" />
+                           <p:inputTextarea
+                              id="conteudo4"
+                              styleClass="template-textarea"
+                              maxlength="400"
+                              rols="5"
+                              cols="49"
+                              autoResize="false"
+                              counter="counter4"
+                              counterTemplate="Restam {0} caracteres."
+                              value="#{templateBean.noticias[3].conteudo}"
+                              required="true"
+                              requiredMessage="Notícia 4 - Conteúdo é um campo de preenchimento 
+                                            obrigatório" />
+                           <h:outputText />
+                           <h:outputText id="counter4" />
+                           <p:outputLabel
+                              value="URL"
+                              for="url4" />
+                           <p:inputText
+                              id="url4"
+                              styleClass="template-textfield"
+                              maxlength="200"
+                              size="51"
+                              value="#{templateBean.noticias[3].url}"
+                              required="true"
+                              requiredMessage="Notícia 4 - URL é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Intranet"
+                              for="intranet4" />
+                           <p:selectBooleanCheckbox
+                              id="intranet4"
+                              value="#{templateBean.noticias[3].intranet}" />
+                           <p:tooltip
+                              for="intranet4"
+                              value="Se esse campo for marcado essa será uma Notícia Interna 
+                                        (visível apenas nas dependências da AGR)." />
+                        </p:panelGrid>
+                     </p:tab>
+                     <p:tab title="Notícia 5">
+                        <p:panelGrid
+                           columns="2"
+                           styleClass="no-border">
+                           <p:outputLabel
+                              value="Notícia 5"
+                              style="color: #1C8AD7; font-weight: bold;" />
+                           <h:outputText />
+                           <p:outputLabel
+                              value="Título"
+                              for="titulo5" />
+                           <p:inputText
+                              id="titulo5"
+                              styleClass="template-textfield"
+                              maxlength="100"
+                              size="51"
+                              value="#{templateBean.noticias[4].titulo}"
+                              required="true"
+                              requiredMessage="Notícia 5 - Título é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Conteúdo"
+                              for="conteudo5" />
+                           <p:inputTextarea
+                              id="conteudo5"
+                              styleClass="template-textarea"
+                              maxlength="400"
+                              rols="5"
+                              cols="49"
+                              autoResize="false"
+                              counter="counter5"
+                              counterTemplate="Restam {0} caracteres."
+                              value="#{templateBean.noticias[4].conteudo}"
+                              required="true"
+                              requiredMessage="Notícia 5 - Conteúdo é um campo de preenchimento 
+                                            obrigatório" />
+                           <h:outputText />
+                           <h:outputText id="counter5" />
+                           <p:outputLabel
+                              value="URL"
+                              for="url5" />
+                           <p:inputText
+                              id="url5"
+                              styleClass="template-textfield"
+                              maxlength="200"
+                              size="51"
+                              value="#{templateBean.noticias[4].url}"
+                              required="true"
+                              requiredMessage="Notícia 5 - URL é um campo de preenchimento 
+                                            obrigatório" />
+                           <p:outputLabel
+                              value="Intranet"
+                              for="intranet5" />
+                           <p:selectBooleanCheckbox
+                              id="intranet5"
+                              value="#{templateBean.noticias[4].intranet}" />
+                           <p:tooltip
+                              for="intranet5"
+                              value="Se esse campo for marcado essa será uma Notícia Interna 
+                                        (visível apenas nas dependências da AGR)." />
+                        </p:panelGrid>
+                     </p:tab>
+                  </p:tabView>
+                  <p:outputLabel value="" />
+                  <p:row>
+                     <p:column
+                        colspan="2"
+                        style="width: 100%;">
+                        <p:panel styleClass="pn-template-buttons">
+                           <p:commandButton
+                              value="Salvar"
+                              icon="ui-icon-pencil"
+                              actionListener="#{templateBean.salvar}"
+                              oncomplete="PF('dialogTemplate').hide()"
+                              update=":form2:templates :form1:messages :form3" />
+                           <p:outputLabel value=" " />
+                           <p:commandButton
+                              value="Limpar"
+                              icon="ui-icon-document"
+                              actionListener="#{templateBean.limpar}"
+                              immediate="true"
+                              update=":form3">
+                              <p:resetInput target="@form" />
+                           </p:commandButton>
+                        </p:panel>
+                     </p:column>
+                  </p:row>
+               </p:panelGrid>
+            </h:form>
+         </p:dialog>
+         <p:confirmDialog
+            message="Confirma a remoção?"
+            showEffect="bounce"
+            hideEffect="fade"
+            header="Remover Template"
+            severity="alert"
+            widgetVar="confirmacao">
+            <p:panel styleClass="pn-template-remove">
+               <p:commandButton
+                  value="Sim"
+                  update=":form2:templates"
+                  oncomplete="PF('confirmacao').hide()"
+                  actionListener="#{templateBean.remover}" />
+               <p:commandButton
+                  type="button"
+                  value="Não"
+                  onclick="PF('confirmacao').hide()" />
+            </p:panel>
+         </p:confirmDialog>
+      </ui:define>
+   </ui:composition>
+</h:body>
+</html>

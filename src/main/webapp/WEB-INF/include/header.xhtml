@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+   xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:ui="http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html"
+   xmlns:f="http://java.sun.com/jsf/core"
+   xmlns:p="http://primefaces.org/ui">
+<body>
+   <ui:composition>
+      <h:form
+         id="form1"
+         prependId="false">
+         <p:growl
+            id="messages"
+            showDetail="false"
+            sticky="false" />
+         <p:menubar id="menu">
+            <p:menuitem
+               value="Início"
+               icon="ui-icon-home"
+               url="/admin/" />
+            <p:submenu
+               label="Cadastro"
+               icon="ui-icon-pencil">
+               <p:menuitem
+                  value="Newsletter"
+                  icon="ui-icon-mail-closed"
+                  url="/admin/newsletter/index.xhtml" />
+               <p:separator />
+               <p:menuitem
+                  value="Template"
+                  icon="ui-icon-document"
+                  url="/admin/template/index.xhtml" />
+            </p:submenu>
+            <f:facet name="options">
+               <p:outputLabel value="Seja bem-vindo(a), " />
+               <p:outputLabel
+                  value="#{loginBean.usuario.login}"
+                  style="font-weight: bold;" />
+               <p:outputLabel
+                  value="."
+                  style="margin-right: 70px;" />
+               <p:commandButton
+                  value="Sair"
+                  icon="ui-icon-extlink"
+                  action="#{loginBean.sair}" />
+            </f:facet>
+         </p:menubar>
+      </h:form>
+      <h1 class="appName center">GeNews</h1>
+      <h3 class="appArea center">
+         <ui:insert name="area">Painel Administrativo</ui:insert>
+      </h3>
+   </ui:composition>
+</body>
+</html>
